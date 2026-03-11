@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.recipeapp.data.remote.AppDatabase
 import com.example.recipeapp.navigation.AppNavGraph
 import com.example.recipeapp.ui.SmartPantryViewModel
 
@@ -16,11 +18,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val db = AppDatabase.getInstance(applicationContext)
+            val pantryViewModel : SmartPantryViewModel = viewModel(
+                factory = object : ViewModelProvider.Factory {
+                    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                        return SmartPantryViewModel(db.favoriteRecipeDao()) as T
+                    }
+                }
+            )
+
+
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                val pantryViewModel: SmartPantryViewModel = viewModel()
                 AppNavGraph(viewModel = pantryViewModel)
             }
         }

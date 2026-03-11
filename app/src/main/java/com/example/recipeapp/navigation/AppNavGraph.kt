@@ -8,11 +8,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipeapp.ui.SmartPantryViewModel
 import com.example.recipeapp.ui.screens.DetailScreen
+import com.example.recipeapp.ui.screens.FavoritesScreen
 import com.example.recipeapp.ui.screens.HomeScreen
 
 object AppDestinations {
     const val HOME = "home"
     const val DETAIL_ROUTE = "detail/{mealId}"
+    const val FAVORITES = "favorites"
 }
 
 @Composable
@@ -28,6 +30,9 @@ fun AppNavGraph(viewModel: SmartPantryViewModel) {
                 viewModel = viewModel,
                 onMealClick = { mealId ->
                     navController.navigate("detail/$mealId")
+                },
+                onFavoritesClick = {
+                    navController.navigate(AppDestinations.FAVORITES)
                 }
             )
         }
@@ -43,6 +48,16 @@ fun AppNavGraph(viewModel: SmartPantryViewModel) {
             DetailScreen(
                 mealId = mealId,
                 viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(AppDestinations.FAVORITES) {
+            FavoritesScreen(
+                viewModel = viewModel,
+                onMealClick = { mealId ->
+                    navController.navigate("detail/$mealId")
+                },
                 onBack = { navController.popBackStack() }
             )
         }

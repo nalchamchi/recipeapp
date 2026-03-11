@@ -2,14 +2,27 @@ package com.example.recipeapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.data.remote.FavoriteRecipeDao
 import com.example.recipeapp.data.remote.MealDetail
 import com.example.recipeapp.data.remote.MealSummary
 import com.example.recipeapp.data.remote.RetrofitInstance
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 
-class SmartPantryViewModel : ViewModel() {
+class SmartPantryViewModel(private val favoriteRecipeDao : FavoriteRecipeDao) : ViewModel() {
+
+    val favoriteRecipes : StateFlow<List<MealDetail>> = favoriteRecipeDao.getAllRecipes()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     private val _pantryItems = MutableStateFlow<List<String>>(emptyList())
     val pantryItems: StateFlow<List<String>> = _pantryItems
@@ -77,6 +90,26 @@ class SmartPantryViewModel : ViewModel() {
             }
         }
     }
+
+    fun toggleFavorite(meal : MealDetail) {
+        viewModelScope.launch {
+            val exists = favoriteRecipeDao.getRecipeById(meal.idMeal).firstOrNull() != null
+            if(exists){
+                favoriteRecipeDao.delete(meal)
+            } else {
+                favoriteRecipeDao.insert(meal)
+            }
+
+
+        }
+
+    }
+
+    fun isFavorite(mealId: String) : Flow<Boolean> {
+        return favoriteRecipeDao.getRecipeById(mealId).map { it != null }
+    }
+
+
 
     fun clearSelectedMealDetail() {
         _selectedMealDetail.value = null

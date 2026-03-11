@@ -1,6 +1,12 @@
 package com.example.recipeapp.data.remote
 
-data class MealDetail(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.io.Serializable
+
+@Entity
+data class MealDetail (
+    @PrimaryKey
     val idMeal: String,
     val strMeal: String,
     val strCategory: String?,
@@ -30,4 +36,4 @@ data class MealDetail(
     val strMeasure8: String?,
     val strMeasure9: String?,
     val strMeasure10: String?
-)
+) : Serializable
