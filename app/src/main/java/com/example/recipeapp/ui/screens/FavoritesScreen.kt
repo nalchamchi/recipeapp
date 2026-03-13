@@ -34,7 +34,6 @@ import coil.compose.AsyncImage
 fun FavoritesScreen(
     viewModel : SmartPantryViewModel,
     onMealClick: (String) -> Unit,
-    onBack : () -> Unit
 ) {
     val favoriteRecipes by viewModel.favoriteRecipes.collectAsState(initial = emptyList())
 
@@ -53,15 +52,6 @@ fun FavoritesScreen(
                     text = "Favorites",
                     style = MaterialTheme.typography.headlineMedium
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = onBack,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Home")
-                }
-
                 Spacer(modifier = Modifier.height(16.dp))
             }
 

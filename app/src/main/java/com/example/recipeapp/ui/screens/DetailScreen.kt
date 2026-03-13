@@ -118,7 +118,7 @@ fun DetailContent(
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Back to Home")
+                Text("Back")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
