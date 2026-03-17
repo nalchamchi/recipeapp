@@ -39,7 +39,6 @@ import com.example.recipeapp.ui.SmartPantryViewModel
 fun HomeScreen(
     viewModel: SmartPantryViewModel,
     onMealClick: (String) -> Unit,
-    onFavoritesClick: () -> Unit
 ) {
     val pantryItems by viewModel.pantryItems.collectAsState()
     val mealResults by viewModel.mealResults.collectAsState()
@@ -83,14 +82,6 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Add Ingredient")
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    onClick = onFavoritesClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Favorites")
                 }
 
 
