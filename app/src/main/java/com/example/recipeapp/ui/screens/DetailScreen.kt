@@ -1,5 +1,6 @@
 package com.example.recipeapp.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipeapp.data.remote.MealDetail
@@ -106,6 +109,7 @@ fun DetailContent(
     onBack: () -> Unit
 ) {
     val ingredients = buildIngredientList(meal)
+    val context = LocalContext.current
 
 
     LazyColumn(
@@ -150,11 +154,27 @@ fun DetailContent(
                             text = meal.strMeal,
                             style = MaterialTheme.typography.headlineSmall
                         )
+
+                        Row {
+                            IconButton(onClick = {
+                                val shareText = "Check out this recipe for ${meal.strMeal}:\nInstructions:\n${meal.strInstructions}"
+                                val intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, shareText)
+                                    type = "text/plain"
+                                }
+                                context.startActivity(Intent.createChooser(intent, null))
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Share,
+                                    contentDescription = "Share Recipe"
+                                )
+                            }
+                        }
                         IconButton(onClick = { onToggleFavorite(meal) }) {
                             Icon(
                                 imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.StarBorder,
                                 contentDescription = if (isFavorite) "Remove from Favorites" else "Add to Favorites"
-
                             )
                         }
                     }
